@@ -12,7 +12,22 @@ import datetime
 import logging
 import os
 
-from .config import LOGGING_DIRECTORY_PATH
+from .config import (
+    DATA_DIRECTORY_PATH,
+    GROUPME_EXPORT_DIRECTORY_PATH,
+    LOGGING_DIRECTORY_PATH,
+    MODELS_DIRECTORY_PATH,
+    OUTPUT_TRAINING_DATA_DIRECTORY_PATH,
+)
+
+for directory_path in (
+    DATA_DIRECTORY_PATH,
+    GROUPME_EXPORT_DIRECTORY_PATH,
+    LOGGING_DIRECTORY_PATH,
+    MODELS_DIRECTORY_PATH,
+    OUTPUT_TRAINING_DATA_DIRECTORY_PATH,
+):  # make important dirs
+    os.makedirs(directory_path, exist_ok=True)
 
 # Set up logging for project
 logging_format: str = "%(asctime)s %(levelname)-8s %(message)s"
