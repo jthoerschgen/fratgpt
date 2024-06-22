@@ -6,26 +6,22 @@ has been trained by tools in this project.
 """
 
 import logging
-import os
 
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-from .config import MODELS_DIRECTORY_PATH
-
 logging.getLogger("transformers").setLevel(logging.ERROR)
 
 
-def prepare_model(model_name: str) -> tuple[GPT2LMHeadModel, GPT2Tokenizer]:
+def prepare_model(model_path: str) -> tuple[GPT2LMHeadModel, GPT2Tokenizer]:
     """Prepare model and tokenizer for a given model name.
 
     Args:
-        model_name (str): Name of model to be used, dir in ./models.
+        model_path (str): Path to model to be used.
 
     Returns:
         tuple[GPT2LMHeadModel, GPT2Tokenizer]: tuple of model and tokenizer.
     """
-    model_path: str = os.path.join(MODELS_DIRECTORY_PATH, model_name)
     model = GPT2LMHeadModel.from_pretrained(model_path)
 
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
@@ -36,7 +32,8 @@ def prepare_model(model_name: str) -> tuple[GPT2LMHeadModel, GPT2Tokenizer]:
 
 def generate(
     prompt: str,
-    model_name: str,
+    model: GPT2LMHeadModel,
+    tokenizer: GPT2Tokenizer,
     max_length: int = 512,
     retries: int = 15,
     top_k: int = 15,
@@ -47,7 +44,8 @@ def generate(
 
     Args:
         prompt (str): String used to generate text.
-        model_name (str): Name of model dir name in ./models.
+        model (GPT2LMHeadModel): Model used for generation.
+        tokenizer (GPT2Tokenizer): Tokenizer used for tokenization.
         max_length (int, optional): Max length of generated text. Defaults to
             512.
         retries (int, optional): Number of times text is allowed to be
@@ -61,8 +59,6 @@ def generate(
         str: Generated text.
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    model, tokenizer = prepare_model(model_name=model_name)
     model.to(device)
 
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
@@ -104,3 +100,42 @@ def generate(
         ].strip()  # combine
 
     return gen_text
+
+
+def generate_from_path(
+    prompt: str,
+    model_path: str,
+    max_length: int = 512,
+    retries: int = 15,
+    top_k: int = 15,
+    top_p: float = 0.85,
+    temperature: float = 1.5,
+) -> str:
+    """Generate text from a given prompt given a model name.
+
+    Args:
+        prompt (str): String used to generate text.
+        model_path (str): Path to model to be used.
+        max_length (int, optional): Max length of generated text. Defaults to
+            512.
+        retries (int, optional): Number of times text is allowed to be
+            regenerated if attempts to generate are unsuccessful. Defaults to
+            15.
+        top_k (int, optional) Top K value. Defaults to 15.
+        top_p (float, optional) Top P value. Defaults to 0.85.
+        temperature (float, optional) Temperature value. Defaults to 1.5.
+
+    Returns:
+        str: Generated text.
+    """
+    model, tokenizer = prepare_model(model_path)
+    return generate(
+        prompt=prompt,
+        model=model,
+        tokenizer=tokenizer,
+        max_length=max_length,
+        retries=retries,
+        top_k=top_k,
+        top_p=top_p,
+        temperature=temperature,
+    )

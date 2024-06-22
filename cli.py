@@ -7,7 +7,7 @@ This module handles arguments for the CLI.
 import argparse
 import inspect
 
-from src.generate_from_model import generate
+from src.generate_from_model import generate_from_path
 from src.preprocess_message_data import parse_groupme_export
 
 parser = argparse.ArgumentParser(
@@ -23,7 +23,7 @@ generate_message_parser = subparsers.add_parser(
 
 generate_defaults: dict = {
     param.name: param.default
-    for param in inspect.signature(generate).parameters.values()
+    for param in inspect.signature(generate_from_path).parameters.values()
     if param.default is not inspect.Parameter.empty
 }
 
@@ -32,8 +32,8 @@ generate_message_parser.add_argument(
     "-m",
     action="store",
     type=str,
-    help="Model Name.",
-    metavar="MODEL NAME"
+    help="Model path.",
+    metavar="MODEL PATH"
 )
 generate_message_parser.add_argument(
     "--prompt",
@@ -88,9 +88,9 @@ preprocess_export_parser = subparsers.add_parser(
 args = parser.parse_args()
 
 if args.command == "generate-message":
-    generated_text: str = generate(
+    generated_text: str = generate_from_path(
         prompt=args.prompt,
-        model_name=args.model,
+        model_path=args.model,
         max_length=args.max_length,
         top_k=args.top_k,
         top_p=args.top_p,
