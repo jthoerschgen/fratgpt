@@ -7,8 +7,8 @@ This module handles arguments for the CLI.
 import argparse
 import inspect
 
-from src.generate_from_model import generate_from_path
-from src.preprocess_message_data import parse_groupme_export
+from fratgpt.generate_from_model import generate_from_path
+from fratgpt.preprocess_message_data import parse_groupme_export
 
 parser = argparse.ArgumentParser(
     prog="fratgpt",

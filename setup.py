@@ -8,6 +8,9 @@ with open("README.md", mode="r", encoding="utf-8") as file:
 with open("LICENSE", mode="r", encoding="utf-8") as file:
     license_text = file.read()
 
+with open("requirements.txt", mode="r", encoding="utf-8") as file:
+    requirements = file.readlines()
+
 setup(
     name="fratgpt",
     version="0.0.1",
@@ -19,4 +22,6 @@ setup(
     url="https://github.com/jthoerschgen/fratgpt",
     license=license_text,
     packages=find_packages(exclude="tests"),
+    install_requires=[req.strip() for req in requirements],
+    python_requires=">=3.6",
 )
