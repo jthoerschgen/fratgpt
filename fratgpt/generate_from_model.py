@@ -31,9 +31,9 @@ def prepare_model(model_path: str) -> tuple[GPT2LMHeadModel, GPT2Tokenizer]:
 
 
 def generate(
-    prompt: str,
     model: GPT2LMHeadModel,
     tokenizer: GPT2Tokenizer,
+    prompt: str = "",
     max_length: int = 512,
     retries: int = 15,
     top_k: int = 15,
@@ -63,6 +63,8 @@ def generate(
 
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
     tokenizer.pad_token = tokenizer.eos_token
+
+    prompt = " " if len(prompt) == 0 else prompt  # handle empty string prompts
 
     # If you add ending punctuation to the prompt if it doesn't have it, the
     # output will, in general, be more like a response rather than simply
@@ -103,9 +105,9 @@ def generate(
 
 
 def generate_from_path(
-    prompt: str,
     model_path: str,
     max_length: int = 512,
+    prompt: str = "",
     retries: int = 15,
     top_k: int = 15,
     top_p: float = 0.85,

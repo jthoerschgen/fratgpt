@@ -41,7 +41,8 @@ generate_message_parser.add_argument(
     action="store",
     type=str,
     help="Prompt used for generating text.",
-    metavar="PROMPT TEXT"
+    metavar="PROMPT TEXT",
+    default="",
 )
 generate_message_parser.add_argument(
     "--max-length",
