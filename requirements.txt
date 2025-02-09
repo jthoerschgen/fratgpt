@@ -1,4 +1,4 @@
 encoder==1.1
 setuptools==69.5.1
-torch==2.3.1
+torch==2.5.0
 transformers==4.41.2
